@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'phosphor-react'
+import { api } from '@/services'
 import { FeedbackType, feedbackTypes } from '@/constants'
 import { Button, CloseButton, ScreenshotButton } from '@/components'
 
@@ -23,11 +24,12 @@ export const FeedbackFormStep = ({
     e.preventDefault()
     setIsLoading(true)
     try {
-      console.log({
-        screenshot,
+      const payload = {
         comment,
-      })
-      await new Promise((resolve) => setTimeout(resolve, 3000))
+        screenshot,
+        type: feedbackType,
+      }
+      await api.post('feedback', payload)
       onFormSubmit()
     } catch (error) {
       console.error(error)
