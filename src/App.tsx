@@ -1,5 +1,5 @@
-import { Widget } from './components'
+import { FeedbackWidget } from 'feedget'
 
 export function App() {
-  return <Widget />
+  return <FeedbackWidget />
 }
