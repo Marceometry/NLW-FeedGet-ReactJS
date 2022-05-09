@@ -1,25 +1,12 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-const defaultCodeString = `import { FeedbackWidget } from 'feedget'
-
-const Component = () => {
-  return (
-    <FeedbackWidget clientId={YOUR_USER_ID} />
-  );
-};
-
-`
-
 type Props = {
   className?: string
   codeString?: string
 }
 
-export const CodeBlock = ({
-  className,
-  codeString = defaultCodeString,
-}: Props) => {
+export const CodeBlock = ({ className, codeString = '' }: Props) => {
   return (
     <SyntaxHighlighter
       language='typescript'

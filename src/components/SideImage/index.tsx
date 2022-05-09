@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Switch } from '@headlessui/react'
 import { CodeBlock } from '@/components'
+import { HOME_EXAMPLE } from '@/constants'
 import { setTheme } from '@/styles'
 
 export const SideImage = () => {
@@ -35,7 +36,10 @@ export const SideImage = () => {
             </Switch>
           </div>
         </Switch.Group>
-        <CodeBlock className='w-[80%] min-w-[380px]' />
+        <CodeBlock
+          className='w-[80%] min-w-[380px]'
+          codeString={HOME_EXAMPLE}
+        />
       </div>
     </div>
   )

@@ -27,8 +27,8 @@ export const Main = () => {
           </div>
           <div className='mt-3 sm:mt-0 sm:ml-5'>
             <a
-              href='#'
-              className='w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-zinc-800 dark:text-zinc-100 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 md:py-4 md:text-lg md:px-10 transition-colors'
+              href='#docs'
+              className='w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-zinc-800 dark:text-zinc-100 bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700 md:py-4 md:text-lg md:px-10 transition-colors'
             >
               Documentação
             </a>

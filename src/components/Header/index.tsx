@@ -21,7 +21,7 @@ export const Header = () => {
         >
           <div className='flex items-center flex-grow flex-shrink-0 lg:flex-grow-0'>
             <div className='flex items-center justify-between w-full pr-3 md:pr-0'>
-              <a href='#'>
+              <a href='/'>
                 <h2 className='text-zinc-900 dark:text-zinc-100 font-bold text-xl'>
                   FeedGet
                 </h2>
@@ -71,7 +71,7 @@ export const Header = () => {
         >
           <div className='rounded-lg shadow-md bg-white dark:!bg-zinc-800 ring-1 ring-black ring-opacity-5 overflow-hidden'>
             <div className='px-5 pt-4 flex items-center justify-between'>
-              <a href='#'>
+              <a href='/'>
                 <h2 className='text-zinc-900 dark:text-zinc-100 font-bold text-xl'>
                   FeedGet
                 </h2>
