@@ -30,17 +30,9 @@ export const useAuth = () => {
 
   const handleCode = async () => {
     if (!code) return
-    const storagedCode = sessionStorage.getItem('@feedget/github_code')
-
-    if (!storagedCode) {
-      sessionStorage.setItem('@feedget/github_code', code)
-      navigate('/', { replace: true })
-      return
-    }
 
     try {
       setIsAuthenticating(true)
-      sessionStorage.clear()
       const user = await api.post('/users/authenticate', { code })
       sessionStorage.setItem('@feedget/user', JSON.stringify(user.data))
       navigate('/dashboard', { replace: true })
