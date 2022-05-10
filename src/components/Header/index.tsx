@@ -1,9 +1,10 @@
-import { Fragment } from 'react'
+import { Fragment, useMemo } from 'react'
 import { Popover, Transition } from '@headlessui/react'
 import { ExternalLinkIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import { useAuth } from '@/hooks'
 
-const navigation = [
-  { name: 'Dashboard', href: '#' },
+const navItems = [
+  { name: 'Dashboard', href: '/dashboard', private: true },
   {
     name: 'Github',
     href: 'https://github.com/Marceometry/feedget.git',
@@ -12,6 +13,13 @@ const navigation = [
 ]
 
 export const Header = () => {
+  const { user, login, logout } = useAuth()
+
+  const navigation = useMemo(() => {
+    if (user) return navItems
+    return navItems.filter((item) => !item.private)
+  }, [user])
+
   return (
     <Popover>
       <div className='relative pt-6 px-4 sm:px-6 lg:px-8'>
@@ -48,9 +56,10 @@ export const Header = () => {
             ))}
             <button
               type='button'
+              onClick={user ? logout : login}
               className='font-medium py-1 px-3 rounded-sm text-zinc-100 bg-brand-500 hover:bg-brand-300 transition-colors'
             >
-              Log in
+              Log {user ? 'out' : 'in'}
             </button>
           </div>
         </nav>

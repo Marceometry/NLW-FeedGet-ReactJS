@@ -1,7 +1,23 @@
+import { useEffect } from 'react'
 import { Header, Main, SideImage, FeedbackWidget, Section } from '@/components'
 import { sections } from '@/constants'
+import { useAuth } from '@/hooks'
 
 export const Home = () => {
+  const { handleCode, isAuthenticating } = useAuth()
+
+  useEffect(() => {
+    handleCode()
+  }, [])
+
+  if (isAuthenticating) {
+    return (
+      <div className='h-screen grid place-items-center bg-zinc-900 text-zinc-100'>
+        <h1 className='text-xl'>Redirecionando...</h1>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className='relative bg-gradient-to-b from-white to-zinc-100 dark:from-zinc-900 dark:to-[#09090a]'>
