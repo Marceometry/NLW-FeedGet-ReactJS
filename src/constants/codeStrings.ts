@@ -2,7 +2,9 @@ export const HOME_EXAMPLE = `import { FeedbackWidget } from 'feedget'
 
 const Component = () => {
   return (
-    <FeedbackWidget clientId={YOUR_CLIENT_ID} />
+    <FeedbackWidget
+      clientId={YOUR_CLIENT_ID}
+    />
   );
 };
 

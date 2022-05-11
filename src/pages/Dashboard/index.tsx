@@ -1,3 +1,4 @@
+import { Header, MyTabs, Table } from '@/components'
 import { FeedbackModel, FeedbackTypesEnum } from '@/constants'
 import { useAuth } from '@/hooks'
 import { api } from '@/services'
@@ -22,35 +23,30 @@ export const Dashboard = () => {
   }
 
   return (
-    <div className='w-screen h-screen p-10 bg-zinc-900 text-zinc-100'>
+    <div className='w-screen h-screen px-10 bg-zinc-900 text-zinc-100'>
+      <Header />
+
       {user?.id && (
-        <>
-          <h1>
-            Seu CLIENT_ID: {user.id}{' '}
-            <DuplicateIcon
-              onClick={handleCopy}
-              className='w-6 h-6 inline cursor-pointer'
-            />
-          </h1>
-          <p className='mt-2'>Nome: {user.name}</p>
-          <p className='mt-2'>Nome de usuário: {user.username}</p>
-          <p className='mt-2'>E-mail: {user.email}</p>
+        <main className='my-8 flex gap-4'>
           {user.avatar_url && (
-            <img className='mt-4 w-64 rounded-lg' src={user.avatar_url} />
+            <img className='w-64 rounded-lg' src={user.avatar_url} />
           )}
-        </>
+          <div>
+            <h1>
+              CLIENT_ID: {user.id}{' '}
+              <DuplicateIcon
+                onClick={handleCopy}
+                className='w-6 h-6 inline cursor-pointer'
+              />
+            </h1>
+            <p className='mt-2'>Nome: {user.name}</p>
+            <p className='mt-2'>Nome de usuário: {user.username}</p>
+            <p className='mt-2'>E-mail: {user.email}</p>
+          </div>
+        </main>
       )}
 
-      <p className='mt-8'>Feedbacks:</p>
-
-      <ul className='mt-2'>
-        {feedbacks.map((item: FeedbackModel) => (
-          <li key={item.id}>
-            <span>{item.comment}</span> -{' '}
-            <span>{FeedbackTypesEnum[item.type]}</span>
-          </li>
-        ))}
-      </ul>
+      <Table feedbacks={feedbacks} />
     </div>
   )
 }
