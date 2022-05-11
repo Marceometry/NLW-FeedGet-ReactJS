@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { DuplicateIcon } from '@heroicons/react/outline'
 import { Header, Table } from '@/components'
-import { useAuth, useToast } from '@/hooks'
+import { useAuth, useCopy, useToast } from '@/hooks'
 import { api } from '@/services'
 
 export const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [feedbacks, setFeedbacks] = useState([])
   const { addToast } = useToast()
+  const { handleCopy } = useCopy()
   const { user } = useAuth()
 
   const loadFeedbacks = async () => {
@@ -24,11 +25,6 @@ export const Dashboard = () => {
   useEffect(() => {
     loadFeedbacks()
   }, [])
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(user.id)
-    addToast('Copiado com sucesso!', 'success', { position: 'top-center' })
-  }
 
   return (
     <div className='w-screen min-h-screen pb-16 bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'>
@@ -48,7 +44,7 @@ export const Dashboard = () => {
               <h1 className='mt-8 mb-4'>
                 <span>CLIENT_ID:</span>
                 <span
-                  onClick={handleCopy}
+                  onClick={() => handleCopy(user.id)}
                   className='p-1 ml-3 rounded-lg inline-flex items-center cursor-pointer bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-700 transition-colors'
                 >
                   {user.id}

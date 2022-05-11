@@ -1,4 +1,4 @@
-import { FeedbackWidget as FeedGet } from 'feedget'
+import { FeedGet } from 'feedget'
 
 export const FeedbackWidget = () => {
   return (

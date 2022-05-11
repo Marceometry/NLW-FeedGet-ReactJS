@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Header, Main, SideImage, FeedbackWidget, Section } from '@/components'
+import { Header, Main, SideImage, Section } from '@/components'
 import { sections } from '@/constants'
 import { useAuth } from '@/hooks'
 
@@ -47,10 +47,10 @@ export const Home = () => {
             id={section.id}
             title={section.title}
             codeString={section.codeString}
+            description={section.description}
             images={section.images}
           />
         ))}
-        <FeedbackWidget />
       </div>
     </>
   )

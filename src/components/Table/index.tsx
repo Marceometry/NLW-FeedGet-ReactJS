@@ -3,6 +3,7 @@ import ideaImg from '@/assets/idea.svg'
 import thoughtImg from '@/assets/thought.svg'
 import { FeedbackModel, FeedbackType, FeedbackTypesEnum } from '@/constants'
 import { Loading } from '@/components'
+import { useCopy } from '@/hooks'
 
 type Props = {
   feedbacks: FeedbackModel[]
@@ -10,6 +11,8 @@ type Props = {
 }
 
 export const Table = ({ feedbacks, isLoading }: Props) => {
+  const { handleCopy } = useCopy()
+
   const getFeedbackTypeIcon = (type: FeedbackType): string => {
     switch (type) {
       case 'BUG':
@@ -22,7 +25,7 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
   }
 
   return (
-    <div className='mt-8 col-span-full xl:col-span-6 bg-zinc-200 dark:bg-zinc-800 shadow-lg rounded-sm border border-zinc-700'>
+    <div className='mt-8 col-span-full xl:col-span-6 bg-zinc-200 dark:bg-zinc-800 shadow-lg rounded-sm border border-zinc-600'>
       <header className='px-5 py-4 border-b border-zinc-500'>
         <h2 className='font-semibold text-zinc-900 dark:text-zinc-100'>
           Feedbacks
@@ -51,7 +54,7 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
               </thead>
               <tbody className='text-sm divide-y divide-zinc-800'>
                 {feedbacks.map((item, index) => (
-                  <tr>
+                  <tr key={item.id}>
                     <td
                       className={`p-2 ${
                         index === 0 ? '!pt-4' : ''
@@ -86,13 +89,13 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                     >
                       <div className='text-left'>
                         {item.screenshot ? (
-                          <a
-                            target='_blank'
+                          <button
+                            type='button'
                             className='underline underline-offset-1'
-                            href={item.screenshot}
+                            onClick={() => handleCopy(item.screenshot!)}
                           >
-                            item.screenshot
-                          </a>
+                            {item.screenshot}
+                          </button>
                         ) : (
                           '-'
                         )}

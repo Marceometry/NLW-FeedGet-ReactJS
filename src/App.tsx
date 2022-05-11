@@ -1,4 +1,5 @@
 import { Toaster } from 'react-hot-toast'
+import { FeedbackWidget } from './components'
 import { ThemeContextProvider } from './contexts'
 import { Router } from './routes'
 
@@ -14,6 +15,7 @@ export function App() {
               'bg-zinc-200 dark:bg-zinc-700 text-zinc-800 dark:!text-zinc-200',
           }}
         />
+        <FeedbackWidget />
         <Router />
       </ThemeContextProvider>
     </div>

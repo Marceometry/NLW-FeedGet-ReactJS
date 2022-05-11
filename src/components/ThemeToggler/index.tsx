@@ -1,13 +1,17 @@
 import { useTheme } from '@/contexts'
 import { Switch } from '@headlessui/react'
 
-export const ThemeToggler = () => {
+type Props = {
+  className?: string
+}
+
+export const ThemeToggler = ({ className }: Props) => {
   const { isDarkMode, setIsDarkMode } = useTheme()
 
   return (
     <Switch.Group>
-      <div className='flex justify-center w-fit h-fit absolute lg:translate-x-[calc(-50%+5%)] translate-x-[calc(-50%)] left-[50%] md:top-8 top-4'>
-        <Switch.Label className='mr-4 text-zinc-100'>Dark mode:</Switch.Label>
+      <div className={`flex justify-center w-fit h-fit text-zinc-100 ${className}`}>
+        <Switch.Label className='mr-4 '>Dark mode:</Switch.Label>
         <Switch
           checked={isDarkMode}
           onChange={setIsDarkMode}
