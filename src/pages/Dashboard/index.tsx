@@ -1,17 +1,24 @@
-import { Header, MyTabs, Table } from '@/components'
-import { FeedbackModel, FeedbackTypesEnum } from '@/constants'
-import { useAuth } from '@/hooks'
-import { api } from '@/services'
-import { DuplicateIcon } from '@heroicons/react/outline'
 import { useEffect, useState } from 'react'
+import { DuplicateIcon } from '@heroicons/react/outline'
+import { Header, Table } from '@/components'
+import { useAuth, useToast } from '@/hooks'
+import { api } from '@/services'
 
 export const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const [feedbacks, setFeedbacks] = useState([])
+  const { addToast } = useToast()
   const { user } = useAuth()
 
   const loadFeedbacks = async () => {
-    const { data } = await api.get(`feedbacks?clientId=${user.id}`)
-    setFeedbacks(data)
+    try {
+      const { data } = await api.get(`feedbacks?clientId=${user.id}`)
+      setFeedbacks(data)
+    } catch (error: any) {
+      addToast(error.message || 'Ocorreu um erro')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -20,33 +27,44 @@ export const Dashboard = () => {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(user.id)
+    addToast('Copiado com sucesso!', 'success', { position: 'top-center' })
   }
 
   return (
-    <div className='w-screen h-screen px-10 bg-zinc-900 text-zinc-100'>
-      <Header />
+    <div className='w-screen min-h-screen pb-16 bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'>
+      <div className='w-full max-w-7xl mx-auto'>
+        <Header />
 
-      {user?.id && (
-        <main className='my-8 flex gap-4'>
-          {user.avatar_url && (
-            <img className='w-64 rounded-lg' src={user.avatar_url} />
-          )}
-          <div>
-            <h1>
-              CLIENT_ID: {user.id}{' '}
-              <DuplicateIcon
-                onClick={handleCopy}
-                className='w-6 h-6 inline cursor-pointer'
-              />
-            </h1>
-            <p className='mt-2'>Nome: {user.name}</p>
-            <p className='mt-2'>Nome de usuário: {user.username}</p>
-            <p className='mt-2'>E-mail: {user.email}</p>
+        <main className='px-8'>
+          <div className='my-16 p-4 rounded-md flex gap-4 bg-zinc-200 dark:bg-zinc-800 border border-zinc-700'>
+            {user.avatar_url && (
+              <img className='w-40 rounded-xl' src={user.avatar_url} />
+            )}
+            <div>
+              <p>
+                {user.name} ({user.username})
+              </p>
+              <p className='mt-2'>{user.email}</p>
+              <h1 className='mt-8 mb-4'>
+                <span>CLIENT_ID:</span>
+                <span
+                  onClick={handleCopy}
+                  className='p-1 ml-3 rounded-lg inline-flex items-center cursor-pointer bg-zinc-300 hover:bg-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-700 transition-colors'
+                >
+                  {user.id}
+                  <DuplicateIcon className='w-6 h-6 ml-2 inline' />
+                </span>
+              </h1>
+              <p className='text-sm'>
+                Use seu CLIENT_ID no componente FeedGet e pronto! Você já estará
+                apto a receber seus feedbacks.
+              </p>
+            </div>
           </div>
-        </main>
-      )}
 
-      <Table feedbacks={feedbacks} />
+          <Table feedbacks={feedbacks} isLoading={isLoading} />
+        </main>
+      </div>
     </div>
   )
 }

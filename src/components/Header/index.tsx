@@ -1,9 +1,12 @@
 import { Fragment, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Popover, Transition } from '@headlessui/react'
 import { ExternalLinkIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import { useAuth } from '@/hooks'
+import logo from '@/assets/feedget-logo.png'
 
 const navItems = [
+  { name: 'Documentação', href: '/' },
   { name: 'Dashboard', href: '/dashboard', private: true },
   {
     name: 'Github',
@@ -13,11 +16,13 @@ const navItems = [
 ]
 
 export const Header = () => {
+  const location = useLocation()
   const { user, login, logout } = useAuth()
 
   const navigation = useMemo(() => {
-    if (user) return navItems
-    return navItems.filter((item) => !item.private)
+    let items = navItems.filter((item) => item.href !== location.pathname)
+    if (!user) items = items.filter((item) => !item.private)
+    return items
   }, [user])
 
   return (
@@ -30,9 +35,7 @@ export const Header = () => {
           <div className='flex items-center flex-grow flex-shrink-0 lg:flex-grow-0'>
             <div className='flex items-center justify-between w-full pr-3 md:pr-0'>
               <a href='/'>
-                <h2 className='text-zinc-900 dark:text-zinc-100 font-bold text-xl'>
-                  FeedGet
-                </h2>
+                <img src={logo} alt='FeedGet Logo' />
               </a>
               <div className='-mr-2 flex items-center'>
                 <Popover.Button className='bg-white dark:!bg-zinc-700 rounded-md p-2 inline-flex items-center justify-center text-zinc-400 dark:text-zinc-200 hover:text-zinc-500 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-brand-500 transition-colors md:hidden'>

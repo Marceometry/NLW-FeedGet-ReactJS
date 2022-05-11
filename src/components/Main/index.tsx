@@ -1,4 +1,8 @@
+import { useAuth } from '@/hooks'
+
 export const Main = () => {
+  const { login } = useAuth()
+
   return (
     <main className='mt-16 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28'>
       <div className='sm:text-center lg:text-left'>
@@ -18,12 +22,13 @@ export const Main = () => {
         </p>
         <div className='mt-10 sm:mt-12 md:mt-32 sm:flex sm:justify-center lg:justify-start'>
           <div className='rounded-md shadow'>
-            <a
-              href='#'
+            <button
+              type='button'
+              onClick={login}
               className='w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-brand-500 hover:bg-brand-300 md:py-4 md:text-lg md:px-10 transition-colors'
             >
               Comece agora
-            </a>
+            </button>
           </div>
           <div className='mt-3 sm:mt-0 sm:ml-5'>
             <a

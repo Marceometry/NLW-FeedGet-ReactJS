@@ -21,7 +21,8 @@ export const ThemeContext = createContext({} as ThemeContextData)
 export function ThemeContextProvider({ children }: ThemeContextProviderProps) {
   const [isDarkMode, setIsDarkMode] = useState(
     localStorage.getItem('@feedget/theme') === 'dark' ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
+      (!localStorage.getItem('@feedget/theme') &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
   )
 
   useEffect(() => {
