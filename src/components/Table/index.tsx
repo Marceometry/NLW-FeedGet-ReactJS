@@ -58,7 +58,7 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                     <td
                       className={`p-2 ${
                         index === 0 ? '!pt-4' : ''
-                      } whitespace-nowrap max-w-[4rem]`}
+                      } whitespace-nowrap w-6`}
                     >
                       <div className='flex items-center'>
                         <div className='w-10 h-10 shrink-0 mr-2 sm:mr-3'>
@@ -80,7 +80,9 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                         index === 0 ? '!pt-4' : ''
                       } whitespace-nowrap`}
                     >
-                      <div className='text-left'>{item.comment}</div>
+                      <div className='text-left max-w-[24rem]'>
+                        {item.comment}
+                      </div>
                     </td>
                     <td
                       className={`p-2 ${
