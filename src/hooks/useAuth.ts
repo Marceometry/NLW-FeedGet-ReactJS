@@ -10,7 +10,7 @@ export const useAuth = () => {
   const { addToast } = useToast()
   const code = useMemo(() => searchParams.get('code'), [])
 
-  const storagedUser = sessionStorage.getItem('@feedget/user')
+  const storagedUser = localStorage.getItem('@feedget/user')
   const user =
     storagedUser && JSON.parse(storagedUser)?.id
       ? JSON.parse(storagedUser)

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { DuplicateIcon } from '@heroicons/react/outline'
-import { Header, Table } from '@/components'
 import { useAuth, useCopy, useToast } from '@/hooks'
+import { Header, Table } from '@/components'
+import { FeedbackModel } from '@/constants'
 import { api } from '@/services'
 
 export const Dashboard = () => {
+  const [feedbacks, setFeedbacks] = useState<FeedbackModel[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [feedbacks, setFeedbacks] = useState([])
   const { user, authHeaders } = useAuth()
   const { handleCopy } = useCopy()
   const { addToast } = useToast()
@@ -28,6 +29,10 @@ export const Dashboard = () => {
   useEffect(() => {
     loadFeedbacks()
   }, [])
+
+  const handleRemoveFeedback = (id: string) => {
+    setFeedbacks((oldState) => oldState.filter((item) => item.id !== id))
+  }
 
   return (
     <div className='w-screen min-h-screen pb-16 bg-zinc-100 text-zinc-900 dark:bg-zinc-900 dark:text-zinc-100'>
@@ -61,7 +66,11 @@ export const Dashboard = () => {
             </div>
           </div>
 
-          <Table feedbacks={feedbacks} isLoading={isLoading} />
+          <Table
+            feedbacks={feedbacks}
+            isLoading={isLoading}
+            removeFeedback={handleRemoveFeedback}
+          />
         </main>
       </div>
     </div>

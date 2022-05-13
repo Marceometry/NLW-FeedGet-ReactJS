@@ -3,14 +3,21 @@ import ideaImg from '@/assets/idea.svg'
 import thoughtImg from '@/assets/thought.svg'
 import { FeedbackModel, FeedbackType, FeedbackTypesEnum } from '@/constants'
 import { Loading } from '@/components'
-import { useCopy } from '@/hooks'
+import { useAuth, useCopy, useToast } from '@/hooks'
+import { TrashIcon } from '@heroicons/react/outline'
+import { api } from '@/services'
+import { useState } from 'react'
 
 type Props = {
   feedbacks: FeedbackModel[]
+  removeFeedback: (id: string) => void
   isLoading?: boolean
 }
 
-export const Table = ({ feedbacks, isLoading }: Props) => {
+export const Table = ({ feedbacks, removeFeedback, isLoading }: Props) => {
+  const [isDeleting, setIsDeleting] = useState('')
+  const { addToast } = useToast()
+  const { authHeaders } = useAuth()
   const { handleCopy } = useCopy()
 
   const getFeedbackTypeIcon = (type: FeedbackType): string => {
@@ -21,6 +28,18 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
         return ideaImg
       case 'OTHER':
         return thoughtImg
+    }
+  }
+
+  const handleDeleteFeedback = async (id: string) => {
+    try {
+      setIsDeleting(id)
+      await api.delete(`/feedbacks/delete?id=${id}`, authHeaders())
+      removeFeedback(id)
+    } catch (error: any) {
+      addToast(error.message || 'Ocorreu um erro', 'error')
+    } finally {
+      setIsDeleting('')
     }
   }
 
@@ -50,18 +69,19 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                   <th className='p-2 whitespace-nowrap'>
                     <div className='font-semibold text-left'>Screenshot</div>
                   </th>
+                  <th />
                 </tr>
               </thead>
               <tbody className='text-sm divide-y divide-zinc-800'>
                 {feedbacks.map((item, index) => (
                   <tr key={item.id}>
                     <td
-                      className={`p-2 ${
+                      className={`p-2 !pr-4 ${
                         index === 0 ? '!pt-4' : ''
-                      } whitespace-nowrap w-6`}
+                      } whitespace-nowrap w-16`}
                     >
                       <div className='flex items-center'>
-                        <div className='w-10 h-10 shrink-0 mr-2 sm:mr-3'>
+                        <div className='w-10 h-10 shrink-0 mr-1'>
                           <img
                             className='rounded-full'
                             src={getFeedbackTypeIcon(item.type)}
@@ -80,14 +100,12 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                         index === 0 ? '!pt-4' : ''
                       } whitespace-nowrap`}
                     >
-                      <div className='text-left max-w-[24rem]'>
-                        {item.comment}
-                      </div>
+                      <div className='text-left'>{item.comment}</div>
                     </td>
                     <td
                       className={`p-2 ${
                         index === 0 ? '!pt-4' : ''
-                      } whitespace-nowrap overflow-hidden max-w-[10rem]`}
+                      } whitespace-nowrap overflow-hidden max-w-[4rem]`}
                     >
                       <div className='text-left'>
                         {item.screenshot ? (
@@ -102,6 +120,20 @@ export const Table = ({ feedbacks, isLoading }: Props) => {
                           '-'
                         )}
                       </div>
+                    </td>
+                    <td
+                      className={`p-2 ${
+                        index === 0 ? '!pt-4' : ''
+                      } whitespace-nowrap overflow-hidden w-[4rem]`}
+                    >
+                      {isDeleting === item.id ? (
+                        <Loading size={7} className='ml-auto' />
+                      ) : (
+                        <TrashIcon
+                          onClick={() => handleDeleteFeedback(item.id)}
+                          className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors'
+                        />
+                      )}
                     </td>
                   </tr>
                 ))}
