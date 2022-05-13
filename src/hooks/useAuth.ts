@@ -17,6 +17,7 @@ export const useAuth = () => {
       : null
 
   const logout = () => {
+    localStorage.clear()
     sessionStorage.clear()
     addToast('Logout realizado com sucesso')
     navigate('/', { replace: true })
@@ -40,8 +41,9 @@ export const useAuth = () => {
     try {
       setIsAuthenticating(true)
       sessionStorage.setItem('@feedget/github_code', code)
-      const user = await api.post('/users/authenticate', { code })
-      sessionStorage.setItem('@feedget/user', JSON.stringify(user.data))
+      const { data } = await api.post('/users/authenticate', { code })
+      localStorage.setItem('@feedget/user', JSON.stringify(data.user))
+      localStorage.setItem('@feedget/token', data.token)
       navigate('/dashboard', { replace: true })
     } catch (error: any) {
       addToast(error.message || 'Ocorreu um erro inesperado', 'error')
@@ -51,5 +53,11 @@ export const useAuth = () => {
     }
   }
 
-  return { user, login, logout, handleCode, isAuthenticating }
+  const authHeaders = () => ({
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('@feedget/token')}`,
+    },
+  })
+
+  return { user, login, logout, handleCode, isAuthenticating, authHeaders }
 }

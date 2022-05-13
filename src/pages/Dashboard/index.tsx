@@ -7,16 +7,19 @@ import { api } from '@/services'
 export const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [feedbacks, setFeedbacks] = useState([])
-  const { addToast } = useToast()
+  const { user, authHeaders } = useAuth()
   const { handleCopy } = useCopy()
-  const { user } = useAuth()
+  const { addToast } = useToast()
 
   const loadFeedbacks = async () => {
     try {
-      const { data } = await api.get(`feedbacks?clientId=${user.id}`)
+      const { data } = await api.get(
+        `feedbacks?clientId=${user.id}`,
+        authHeaders()
+      )
       setFeedbacks(data)
     } catch (error: any) {
-      addToast(error.message || 'Ocorreu um erro')
+      addToast(error.message || 'Ocorreu um erro', 'error')
     } finally {
       setIsLoading(false)
     }
