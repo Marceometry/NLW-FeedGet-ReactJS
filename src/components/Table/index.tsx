@@ -10,20 +10,24 @@ import { useState } from 'react'
 
 type Props = {
   feedbacks: FeedbackModel[]
-  removeFeedback: (id: string) => void
   loadFeedbacks: () => void
-  isLoading?: boolean
+  handleCleanFeedbacksList: () => void
+  removeFeedback: (id: string) => void
+  setIsLoading: (value: boolean) => void
+  isLoading: boolean
 }
 
 export const Table = ({
   feedbacks,
   loadFeedbacks,
   removeFeedback,
+  handleCleanFeedbacksList,
+  setIsLoading,
   isLoading,
 }: Props) => {
   const [isDeleting, setIsDeleting] = useState('')
+  const { user, authHeaders } = useAuth()
   const { addToast } = useToast()
-  const { authHeaders } = useAuth()
   const { handleCopy } = useCopy()
 
   const getFeedbackTypeIcon = (type: FeedbackType): string => {
@@ -49,16 +53,39 @@ export const Table = ({
     }
   }
 
+  const handleDeleteAllFeedbacks = async (clientId: string) => {
+    try {
+      setIsLoading(true)
+      await api.delete(
+        `/feedbacks/deleteAll?clientId=${clientId}`,
+        authHeaders()
+      )
+      handleCleanFeedbacksList()
+    } catch (error: any) {
+      addToast(error.message || 'Ocorreu um erro', 'error')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className='mt-8 col-span-full xl:col-span-6 bg-zinc-200 dark:bg-zinc-800 shadow-lg rounded-sm border border-zinc-600'>
       <header className='flex justify-between px-5 py-4 border-b border-zinc-500'>
         <h2 className='font-semibold text-zinc-900 dark:text-zinc-100'>
           Feedbacks
         </h2>
-        <RefreshIcon
-          onClick={loadFeedbacks}
-          className='w-7 h-7 cursor-pointer text-zinc-300 hover:text-zinc-400 transition-colors'
-        />
+        {!isLoading && (
+          <div className='flex gap-6'>
+            <button onClick={loadFeedbacks}>
+              <RefreshIcon className='w-7 h-7 cursor-pointer text-zinc-600 hover:text-zinc-700 dark:text-zinc-300 dark:hover:text-zinc-400 transition-colors' />
+            </button>
+            {!!feedbacks?.length && (
+              <button onClick={() => handleDeleteAllFeedbacks(user.id)}>
+                <TrashIcon className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors' />
+              </button>
+            )}
+          </div>
+        )}
       </header>
       <div className='p-3'>
         <div className='overflow-x-auto'>
@@ -137,12 +164,13 @@ export const Table = ({
                       } whitespace-nowrap overflow-hidden w-[4rem]`}
                     >
                       {isDeleting === item.id ? (
-                        <Loading size={7} className='ml-auto' />
+                        <div className='ml-auto'>
+                          <Loading size={7} />
+                        </div>
                       ) : (
-                        <TrashIcon
-                          onClick={() => handleDeleteFeedback(item.id)}
-                          className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors'
-                        />
+                        <button onClick={() => handleDeleteFeedback(item.id)}>
+                          <TrashIcon className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors' />
+                        </button>
                       )}
                     </td>
                   </tr>
