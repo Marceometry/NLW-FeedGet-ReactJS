@@ -7,6 +7,7 @@ import { useAuth, useCopy, useToast } from '@/hooks'
 import { RefreshIcon, TrashIcon } from '@heroicons/react/outline'
 import { api } from '@/services'
 import { useState } from 'react'
+import { format } from 'date-fns'
 
 type Props = {
   feedbacks: FeedbackModel[]
@@ -106,6 +107,9 @@ export const Table = ({
                   <th className='p-2 whitespace-nowrap'>
                     <div className='font-semibold text-left'>Screenshot</div>
                   </th>
+                  <th className='p-2 whitespace-nowrap'>
+                    <div className='font-semibold text-left'>Data</div>
+                  </th>
                   <th />
                 </tr>
               </thead>
@@ -135,7 +139,7 @@ export const Table = ({
                     <td
                       className={`p-2 ${
                         index === 0 ? '!pt-4' : ''
-                      } whitespace-nowrap`}
+                      } whitespace-nowrap max-w-[6rem]`}
                     >
                       <div className='text-left'>{item.comment}</div>
                     </td>
@@ -163,15 +167,27 @@ export const Table = ({
                         index === 0 ? '!pt-4' : ''
                       } whitespace-nowrap overflow-hidden w-[4rem]`}
                     >
-                      {isDeleting === item.id ? (
-                        <div className='ml-auto'>
-                          <Loading size={7} />
-                        </div>
-                      ) : (
-                        <button onClick={() => handleDeleteFeedback(item.id)}>
-                          <TrashIcon className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors' />
-                        </button>
-                      )}
+                      {format(new Date(item.createdAt), 'dd/MM/yyyy HH:mm')}
+                    </td>
+                    <td
+                      className={`p-2 ${
+                        index === 0 ? '!pt-4' : ''
+                      } whitespace-nowrap overflow-hidden w-[4rem]`}
+                    >
+                      <div className='flex'>
+                        {isDeleting === item.id ? (
+                          <div className='ml-auto'>
+                            <Loading size={7} />
+                          </div>
+                        ) : (
+                          <button
+                            className='ml-auto'
+                            onClick={() => handleDeleteFeedback(item.id)}
+                          >
+                            <TrashIcon className='w-7 h-7 cursor-pointer hover:text-red-400 transition-colors' />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

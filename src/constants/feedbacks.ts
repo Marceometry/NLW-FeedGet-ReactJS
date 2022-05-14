@@ -11,4 +11,5 @@ export type FeedbackModel = {
   type: FeedbackType
   comment: string
   screenshot?: string
+  createdAt: string
 }
