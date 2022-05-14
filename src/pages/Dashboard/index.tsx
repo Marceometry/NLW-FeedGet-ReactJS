@@ -7,13 +7,15 @@ import { api } from '@/services'
 
 export const Dashboard = () => {
   const [feedbacks, setFeedbacks] = useState<FeedbackModel[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const { user, authHeaders } = useAuth()
   const { handleCopy } = useCopy()
   const { addToast } = useToast()
 
   const loadFeedbacks = async () => {
     try {
+      setIsLoading(true)
+      await new Promise((resolve) => setTimeout(resolve, 2000))
       const { data } = await api.get(
         `feedbacks?clientId=${user.id}`,
         authHeaders()
@@ -69,6 +71,7 @@ export const Dashboard = () => {
           <Table
             feedbacks={feedbacks}
             isLoading={isLoading}
+            loadFeedbacks={loadFeedbacks}
             removeFeedback={handleRemoveFeedback}
           />
         </main>

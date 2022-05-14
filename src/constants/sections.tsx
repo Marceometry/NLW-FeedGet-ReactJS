@@ -33,8 +33,8 @@ const basicSection: SectionProps = {
       ou{' '}
       <span className='py-[2px] px-1 rounded-sm text-sm bg-zinc-300 dark:bg-zinc-600'>
         yarn add feedget
-      </span>
-      .
+      </span>{' '}
+      (demonstração do componente no canto da tela).
     </p>
   ),
 }

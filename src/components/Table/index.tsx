@@ -4,17 +4,23 @@ import thoughtImg from '@/assets/thought.svg'
 import { FeedbackModel, FeedbackType, FeedbackTypesEnum } from '@/constants'
 import { Loading } from '@/components'
 import { useAuth, useCopy, useToast } from '@/hooks'
-import { TrashIcon } from '@heroicons/react/outline'
+import { RefreshIcon, TrashIcon } from '@heroicons/react/outline'
 import { api } from '@/services'
 import { useState } from 'react'
 
 type Props = {
   feedbacks: FeedbackModel[]
   removeFeedback: (id: string) => void
+  loadFeedbacks: () => void
   isLoading?: boolean
 }
 
-export const Table = ({ feedbacks, removeFeedback, isLoading }: Props) => {
+export const Table = ({
+  feedbacks,
+  loadFeedbacks,
+  removeFeedback,
+  isLoading,
+}: Props) => {
   const [isDeleting, setIsDeleting] = useState('')
   const { addToast } = useToast()
   const { authHeaders } = useAuth()
@@ -45,10 +51,14 @@ export const Table = ({ feedbacks, removeFeedback, isLoading }: Props) => {
 
   return (
     <div className='mt-8 col-span-full xl:col-span-6 bg-zinc-200 dark:bg-zinc-800 shadow-lg rounded-sm border border-zinc-600'>
-      <header className='px-5 py-4 border-b border-zinc-500'>
+      <header className='flex justify-between px-5 py-4 border-b border-zinc-500'>
         <h2 className='font-semibold text-zinc-900 dark:text-zinc-100'>
           Feedbacks
         </h2>
+        <RefreshIcon
+          onClick={loadFeedbacks}
+          className='w-7 h-7 cursor-pointer text-zinc-300 hover:text-zinc-400 transition-colors'
+        />
       </header>
       <div className='p-3'>
         <div className='overflow-x-auto'>
