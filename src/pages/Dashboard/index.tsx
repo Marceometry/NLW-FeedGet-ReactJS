@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react'
-import { CheckIcon, DuplicateIcon } from '@heroicons/react/outline'
+import { useNavigate } from 'react-router-dom'
+import { CheckIcon, DuplicateIcon, TrashIcon } from '@heroicons/react/outline'
 import { useAuth, useCopy, useToast } from '@/hooks'
-import { Header, Loading, Table } from '@/components'
+import { Header, Loading, Modal, Table } from '@/components'
 import { FeedbackModel } from '@/constants'
 import { api } from '@/services'
 
 export const Dashboard = () => {
+  const navigate = useNavigate()
   const { user, authHeaders } = useAuth()
   const { handleCopy } = useCopy()
   const { addToast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [isUpdatingEmail, setIsUpdatingEmail] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [feedbacks, setFeedbacks] = useState<FeedbackModel[]>([])
   const [userEmail, setUserEmail] = useState(user.email || '')
 
@@ -32,6 +35,18 @@ export const Dashboard = () => {
   useEffect(() => {
     loadFeedbacks()
   }, [])
+
+  const handleDeleteUserAccount = async () => {
+    setIsDeleteModalOpen(false)
+    try {
+      await api.delete(`users/delete?id=${user.id}`, authHeaders())
+      addToast('Conta excluída com sucesso!')
+      navigate('/', { replace: true })
+      localStorage.clear()
+    } catch (error: any) {
+      addToast(error.message || 'Ocorreu um erro', 'error')
+    }
+  }
 
   const handleUpdateUserEmail = async (email: string) => {
     try {
@@ -63,7 +78,13 @@ export const Dashboard = () => {
       <div className='w-full max-w-7xl mx-auto'>
         <Header />
 
-        <main className='px-8'>
+        <main className='px-8 relative'>
+          <button
+            className='absolute right-12 top-4'
+            onClick={() => setIsDeleteModalOpen(true)}
+          >
+            <TrashIcon className='w-7 h-7 ml-auto cursor-pointer hover:text-red-400 transition-colors' />
+          </button>
           <div className='my-16 p-4 rounded-md flex gap-4 bg-zinc-200 dark:bg-zinc-800 border border-zinc-700'>
             {user.avatar_url && (
               <img
@@ -120,6 +141,12 @@ export const Dashboard = () => {
             loadFeedbacks={loadFeedbacks}
             removeFeedback={handleRemoveFeedback}
             handleCleanFeedbacksList={handleCleanFeedbacksList}
+          />
+
+          <Modal
+            isOpen={isDeleteModalOpen}
+            onConfirm={handleDeleteUserAccount}
+            onClose={() => setIsDeleteModalOpen(false)}
           />
         </main>
       </div>
